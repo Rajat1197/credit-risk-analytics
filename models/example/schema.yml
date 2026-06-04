@@ -1,21 +1,56 @@
-
 version: 2
 
 models:
-    - name: my_first_dbt_model
-      description: "A starter dbt model"
-      columns:
-          - name: id
-            description: "The primary key for this table"
-            tests:
-                - unique
-                - not_null
+  - name: stg_loans
+    description: "Staged loan data with cleaned column names"
+    columns:
+      - name: loan_id
+        description: "Unique loan identifier"
+        tests:
+          - unique
+          - not_null
 
-    - name: my_second_dbt_model
-      description: "A starter dbt model"
-      columns:
-          - name: id
-            description: "The primary key for this table"
-            tests:
-                - unique
-                - not_null
+      - name: loan_amount
+        tests:
+          - not_null
+
+      - name: loan_status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Fully Paid', 'Charged Off']
+
+  - name: int_loan_defaults
+    description: "Loan data with default flags and risk segmentation"
+    columns:
+      - name: loan_id
+        tests:
+          - unique
+          - not_null
+
+      - name: is_default
+        description: "1 if loan charged off, 0 if fully paid"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: risk_tier
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Low Risk', 'Medium Risk', 'High Risk', 'Very High Risk']
+
+  - name: mart_credit_risk_summary
+    description: "Credit risk summary aggregated by risk tier, DTI, and income band"
+    columns:
+      - name: total_loans
+        tests:
+          - not_null
+
+      - name: default_rate_pct
+        tests:
+          - not_null
