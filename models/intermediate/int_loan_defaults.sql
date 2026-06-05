@@ -19,6 +19,9 @@ defaults_flagged as (
         loan_purpose,
         debt_to_income_ratio,
         loan_status,
+        revolving_utilization,
+        delinquencies_2yrs,
+        outstanding_principal,
 
         -- Default flag: 1 if charged off, 0 if fully paid
         case
